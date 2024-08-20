@@ -46,5 +46,18 @@ def merge(lista, inicio, meio, fim):
 
 lista = [3,4,5,2,1,6]
 merge_sort(lista, 0, len(lista)-1)
-print(lista)
+print("Aleatória: ",lista)
+
+lista = [1,2,3,4,5,6]
+merge_sort(lista, 0, len(lista)-1)
+print("Ordenada: ",lista)
+
+lista = [6,5,4,3,2,1]
+merge_sort(lista, 0, len(lista)-1)
+print("Inversa: ",lista)
+
+lista = [3,1,5,6,1,6]
+merge_sort(lista, 0, len(lista)-1)
+print("Duplicados: ",lista)
+
 
