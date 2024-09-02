@@ -44,20 +44,22 @@ def merge(lista, inicio, meio, fim):
     for j in range (len(temporario)):
         lista[inicio + j] = temporario[j]
 
-lista = [3,4,5,2,1,6]
-merge_sort(lista, 0, len(lista)-1)
-print("Aleatória: ",lista)
+def teste_merge():
+    lista = [3,4,5,2,1,6]
+    merge_sort(lista, 0, len(lista)-1)
+    print("Aleatória: ",lista)
 
-lista = [1,2,3,4,5,6]
-merge_sort(lista, 0, len(lista)-1)
-print("Ordenada: ",lista)
+    lista = [1,2,3,4,5,6]
+    merge_sort(lista, 0, len(lista)-1)
+    print("Ordenada: ",lista)
 
-lista = [6,5,4,3,2,1]
-merge_sort(lista, 0, len(lista)-1)
-print("Inversa: ",lista)
+    lista = [6,5,4,3,2,1]
+    merge_sort(lista, 0, len(lista)-1)
+    print("Inversa: ",lista)
 
-lista = [3,1,5,6,1,6]
-merge_sort(lista, 0, len(lista)-1)
-print("Duplicados: ",lista)
+    lista = [3,1,5,6,1,6]
+    merge_sort(lista, 0, len(lista)-1)
+    print("Duplicados: ",lista)
 
 
+teste_merge()
