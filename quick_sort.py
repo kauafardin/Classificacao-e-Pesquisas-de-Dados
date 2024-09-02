@@ -24,19 +24,21 @@ def particiona(lista, inicio, fim):
     return direita
    
 
+def teste_quick():
+    lista_aleatoria = [40,20,10,80,60,50,7,30,100]
+    quick_sort(lista_aleatoria, 0, len(lista_aleatoria)-1)
+    print(f"Aleatória: {lista_aleatoria}")
 
-lista_aleatoria = [40,20,10,80,60,50,7,30,100]
-quick_sort(lista_aleatoria, 0, len(lista_aleatoria)-1)
-print(f"Aleatória: {lista_aleatoria}")
+    lista_ordenada = [7,10,20,30,40,50,60,80,100]
+    quick_sort(lista_ordenada, 0, len(lista_ordenada)-1)
+    print(f"Ordenada {lista_ordenada}")
 
-lista_ordenada = [7,10,20,30,40,50,60,80,100]
-quick_sort(lista_ordenada, 0, len(lista_ordenada)-1)
-print(f"Ordenada {lista_ordenada}")
+    lista_inversa = [100,80,60,50,40,30,20,10,7]
+    quick_sort(lista_inversa, 0, len(lista_inversa)-1)
+    print(f"Inversa {lista_inversa}")
 
-lista_inversa = [100,80,60,50,40,30,20,10,7]
-quick_sort(lista_inversa, 0, len(lista_inversa)-1)
-print(f"Inversa {lista_inversa}")
+    lista_duplicada = [40,20,50,80,60,50,7,80,100]
+    quick_sort(lista_duplicada, 0, len(lista_duplicada)-1)
+    print(f"Duplicada {lista_duplicada}")
 
-lista_duplicada = [40,20,50,80,60,50,7,80,100]
-quick_sort(lista_duplicada, 0, len(lista_duplicada)-1)
-print(f"Duplicada {lista_duplicada}")
+teste_quick()
