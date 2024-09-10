@@ -3,9 +3,9 @@ def heap_sort(lista, tamanho, i):
     esquerdo = 2 * i + 1
     direito = 2 * i + 2
 
-    if esquerdo < tamanho and lista[esquerdo] > lista[maior]:
+    if esquerdo < tamanho and lista[esquerdo] < lista[maior]:
         maior = esquerdo
-    if direito < tamanho and lista[direito] > lista[maior]:
+    if direito < tamanho and lista[direito] < lista[maior]:
         maior = direito
     
     if maior != i:
