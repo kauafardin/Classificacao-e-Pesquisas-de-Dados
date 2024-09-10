@@ -3,9 +3,9 @@ def heap_sort(lista, tamanho_l, pai):
     filho_esquerdo = pai * 2 + 1
     filho_direito = pai * 2 + 2
 
-    if filho_esquerdo < tamanho_l and lista[filho_esquerdo] < lista[menor]:
+    if filho_esquerdo < tamanho_l and lista[filho_esquerdo] > lista[menor]:
         menor = filho_esquerdo
-    if filho_direito < tamanho_l and lista[filho_direito] < lista[menor]:
+    if filho_direito < tamanho_l and lista[filho_direito] > lista[menor]:
         menor = filho_direito
 
     if menor != pai:
