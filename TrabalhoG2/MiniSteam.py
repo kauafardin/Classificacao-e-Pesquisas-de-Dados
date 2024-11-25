@@ -1,188 +1,216 @@
 class Jogo:
-    def __init__ (self, jogoId, titulo, desenvolvedor, preco, generos):
+    def __init__(self, jogoId, titulo, desenvolvedor, preco, generos):
+        # inicializa os atributos do jogo, como ID, título, desenvolvedor, preço e gêneros
         self.jogoId = jogoId
         self.titulo = titulo
         self.desenvolvedor = desenvolvedor
         self.preco = preco
-        self.generos = generos # Lista, pois um jogo pode pertencer a múltiplos gêneros
+        self.generos = generos  # lista para suportar múltiplos gêneros
 
 class NoJogo:
-    def __init__ (self, jogo):
+    def __init__(self, jogo):
+        # inicializa o nó da árvore com um jogo, sem filhos inicialmente
         self.jogo = jogo
         self.esquerda = None
         self.direita = None
 
 class ArvoreJogos:
-    def __init__ (self):
+    def __init__(self):
+        # inicializa a árvore binária de busca sem uma raiz
         self.raiz = None
 
     def inserir(self, jogo):
+        # insere um jogo na árvore de acordo com o preço
         if self.raiz is None:
+            # se a árvore estiver vazia, o jogo se torna a raiz
             self.raiz = NoJogo(jogo)
             return
 
-        # Insere o jogo na árvore comparando seu preço com os nós existentes
         node = self.raiz
         while True:
             if jogo.preco < node.jogo.preco:
-                # Se não houver filho à esquerda, insere o jogo
+                # desce para a esquerda se o preço for menor
                 if node.esquerda is None:
                     node.esquerda = NoJogo(jogo)
                     break
-                node = node.esquerda  # Caso contrário, continua à esquerda
+                node = node.esquerda
             elif jogo.preco > node.jogo.preco:
-                # Se não houver filho à direita, insere o jogo
+                # desce para a direita se o preço for maior
                 if node.direita is None:
                     node.direita = NoJogo(jogo)
                     break
-                node = node.direita  # Caso contrário, continua à direita
+                node = node.direita
             else:
-                # Se os preços forem iguais, compara os títulos
+                # trata nós com preços iguais comparando títulos para manter consistência
                 if jogo.titulo < node.jogo.titulo:
-                    # Se o título for menor, insere à esquerda
                     if node.esquerda is None:
                         node.esquerda = NoJogo(jogo)
                         break
-                    node = node.esquerda  # Caso contrário, continua à esquerda
+                    node = node.esquerda
                 else:
-                    # Se o título for maior ou igual, insere à direita
                     if node.direita is None:
                         node.direita = NoJogo(jogo)
                         break
-                    node = node.direita  # Caso contrário, continua à direita
-
+                    node = node.direita
 
     def buscar_por_preco(self, precoUnico):
-        node = self.raiz
+        # busca jogos com um preço específico
         resultados = []
-
-        while node is not None:
-            if node.jogo.preco == precoUnico:
-                resultados.append(node.jogo)
-
-            # Percorre a árvore para esquerda ou direita dependendo do preço
-            if precoUnico < node.jogo.preco:
-                node = node.esquerda
-            else:
-                node = node.direita
-
-        if not resultados:
-            print(f"Nenhum jogo encontrado com o preço R${precoUnico:.2f}.")
+        self._buscar_preco_aux(self.raiz, precoUnico, resultados)
         return resultados
+
+    def _buscar_preco_aux(self, node, preco, resultados):
+        # busca recursiva para encontrar jogos com um preço específico
+        if node is None:
+            return
+        if node.jogo.preco == preco:
+            resultados.append(node.jogo)
+        if preco < node.jogo.preco:
+            self._buscar_preco_aux(node.esquerda, preco, resultados)
+        else:
+            self._buscar_preco_aux(node.direita, preco, resultados)
 
     def buscar_por_faixa_de_preco(self, precoMinimo, precoMaximo):
-        node = self.raiz
+        # busca jogos dentro de uma faixa de preço
         resultados = []
-
-        while node is not None:
-            if precoMinimo <= node.jogo.preco <= precoMaximo:
-                resultados.append(node.jogo)
-
-            if precoMinimo < node.jogo.preco:
-                node = node.esquerda
-            elif precoMaximo > node.jogo.preco:
-                node = node.direita  
-            else:
-                break
-
-        if not resultados:
-            print(f"Nenhum jogo encontrado na faixa de preço de R${precoMinimo:.2f} a R${precoMaximo:.2f}.")
+        self._buscar_faixa_aux(self.raiz, precoMinimo, precoMaximo, resultados)
         return resultados
- 
+
+    def _buscar_faixa_aux(self, node, minimo, maximo, resultados):
+        # busca recursiva para encontrar jogos dentro de uma faixa de preço
+        if node is None:
+            return
+        if minimo <= node.jogo.preco <= maximo:
+            resultados.append(node.jogo)
+        if minimo < node.jogo.preco:
+            self._buscar_faixa_aux(node.esquerda, minimo, maximo, resultados)
+        if maximo > node.jogo.preco:
+            self._buscar_faixa_aux(node.direita, minimo, maximo, resultados)
+
 class HashGeneros:
     def __init__(self):
+        # inicializa a tabela hash com um dicionário
         self.generoParaJogos = {}
 
     def adicionar_jogo(self, jogo):
-        # Adiciona o jogo aos gêneros correspondentes
+        # adiciona um jogo a cada gênero correspondente
         for genero in jogo.generos:
             if genero not in self.generoParaJogos:
                 self.generoParaJogos[genero] = []
             self.generoParaJogos[genero].append(jogo)
 
     def obter_jogos(self, genero):
-        # Obtém todos os jogos para um gênero específico
-        if genero in self.generoParaJogos:
-            return self.generoParaJogos[genero]
-        else:
-            return []
+        # retorna todos os jogos associados a um gênero
+        return self.generoParaJogos.get(genero, [])
 
+#def menu():
+    # função principal para interagir com o sistema
+    ##arvore = ArvoreJogos()
+    #hashTable = HashGeneros()
+    #idsExistentes = set()  # rastreia os IDs de jogos adicionados
 
-def menu():
-    arvore = ArvoreJogos()
-    hashTable = HashGeneros()
-    idsExistentes = set()  # Usado para rastrear IDs de jogos já inseridos
-    
-    while True:
-        try:
-            print("\n--- Menu de Operações ---")
-            print("1. Adicionar Jogo")
-            print("2. Buscar Jogo por preço")
-            print("3. Buscar Jogo por faixa de preço")
-            print("4. Buscar Jogo por gênero")
-            print("0. Sair")
-            
-            opcao = int(input("Escolha uma opção: "))
+    #while True:
+        #print("\n--- Menu de Operações ---")
+        #print("1. Adicionar Jogo")
+        #print("2. Buscar Jogo por preço")
+        #print("3. Buscar Jogo por faixa de preço")
+        #print("4. Buscar Jogo por gênero")
+        #print("0. Sair")
 
-            if opcao == 1:
-                try:
-                    jogoId = int(input("ID do jogo: "))
-                    if jogoId in idsExistentes:
-                        print(f"Erro: O ID {jogoId} já foi utilizado para outro jogo. Tente novamente com um ID diferente.")
-                        continue
-                    
-                    titulo = input("Título do jogo: ")
-                    desenvolvedor = input("Nome do Desenvolvedor: ")
-                    preco = float(input("Preço: R$"))
-                    generos = input("Gêneros (separados por vírgulas): ").split(",")
-                    generos = [g.strip() for g in generos]
-                    
-                    novoJogo = Jogo(jogoId, titulo, desenvolvedor, preco, generos)
-                    
-                    arvore.inserir(novoJogo)
-                    hashTable.adicionar_jogo(novoJogo)
-                    idsExistentes.add(jogoId)
-                    
-                    print(f"Jogo '{titulo}' inserido com sucesso!")
-                except ValueError:
-                    print("Erro: Dados inválidos. Certifique-se de inserir números onde solicitado.")
-            
-            elif opcao == 2:
-                try:
-                    preco = float(input("Preço: R$"))
-                    resultados = arvore.buscar_por_preco(preco)
-                    for jogo in resultados:
-                        print(f"Jogo encontrado: {jogo.titulo} - R${jogo.preco:.2f}")
-                except ValueError:
-                    print("Erro: O preço deve ser um número válido.")
-            
-            elif opcao == 3:
-                try:
-                    precoMin = float(input("Preço mínimo: R$"))
-                    precoMax = float(input("Preço máximo: R$"))
-                    resultados = arvore.buscar_por_faixa_de_preco(precoMin, precoMax)
-                    for jogo in resultados:
-                        print(f"Jogo encontrado: {jogo.titulo} - R${jogo.preco:.2f}")
-                except ValueError:
-                    print("Erro: Insira valores numéricos válidos para os preços.")
-            
-            elif opcao == 4:
-                genero = input("Gênero: ").strip()
-                resultados = hashTable.obter_jogos(genero)
-                if resultados:
-                    for jogo in resultados:
-                        print(f"Jogo encontrado: {jogo.titulo} - Gênero: {genero}")
-                else:
-                    print(f"Nenhum jogo encontrado no gênero '{genero}'.")
-            
-            elif opcao == 0:
-                print("Saindo...")
-                break
-            else:
-                print("Opção inválida. Tente novamente.")
-        except ValueError:
-            print("Erro: Digite uma opção válida.")
+        #opcao = input("Escolha uma opção: ").strip()
 
+        #if opcao == "1":
+            # adiciona um novo jogo
+            #try:
+                #jogoId = int(input("ID do jogo: "))
+                #if jogoId in idsExistentes:
+                    #print(f"Erro: ID {jogoId} já cadastrado.")
+                    #continue
+                #titulo = input("Título do jogo: ")
+                #desenvolvedor = input("Nome do desenvolvedor: ")
+                #preco = int(input("Preço (inteiro): R$"))
+                #generos = input("Gêneros (separados por vírgula): ").split(",")
+                #generos = [g.strip() for g in generos]
+                #novoJogo = Jogo(jogoId, titulo, desenvolvedor, preco, generos)
+                #arvore.inserir(novoJogo)
+                #hashTable.adicionar_jogo(novoJogo)
+                #idsExistentes.add(jogoId)
+                #print(f"Jogo '{titulo}' adicionado com sucesso!")
+            #except ValueError:
+                #print("Erro: Insira dados válidos.")
+        #elif opcao == "2":
+            # busca jogos por preço exato
+            #try:
+                #preco = int(input("Preço: R$"))
+                #resultados = arvore.buscar_por_preco(preco)
+                #if resultados:
+                    #for jogo in resultados:
+                        #print(f"Jogo encontrado: {jogo.titulo} - R${jogo.preco}")
+                #else:
+                    #print(f"Nenhum jogo encontrado com preço R${preco}.")
+            #except ValueError:
+                #print("Erro: Insira um preço válido.")
+        #elif opcao == "3":
+            # busca jogos dentro de uma faixa de preço
+            #try:
+                #minimo = int(input("Preço mínimo: R$"))
+                #maximo = int(input("Preço máximo: R$"))
+                #resultados = arvore.buscar_por_faixa_de_preco(minimo, maximo)
+                #if resultados:
+                    #for jogo in resultados:
+                        #print(f"Jogo encontrado: {jogo.titulo} - R${jogo.preco}")
+                #else:
+                    #print(f"Nenhum jogo encontrado na faixa de R${minimo} a R${maximo}.")
+            #except ValueError:
+                #print("Erro: Insira valores válidos.")
+        #elif opcao == "4":
+            # busca jogos por gênero
+            #genero = input("Gênero: ").strip()
+            #resultados = hashTable.obter_jogos(genero)
+            #if resultados:
+                #for jogo in resultados:
+                    #print(f"Jogo encontrado: {jogo.titulo} - Gênero: {genero}")
+            #else:
+                #print(f"Nenhum jogo encontrado para o gênero '{genero}'.")
+        #elif opcao == "0":
+            #print("Saindo...")
+            #break
+        #else:
+            #print("Opção inválida. Tente novamente.")
 
-if __name__ == "__main__":
-    menu()
+# Criando objetos de exemplo para inserir na árvore e na hash table
+jogo1 = Jogo(1, "Jogo A", "Dev A", 50, ["Aventura", "RPG"])
+jogo2 = Jogo(2, "Jogo B", "Dev B", 30, ["Estratégia", "Ação"])
+jogo3 = Jogo(3, "Jogo C", "Dev C", 70, ["Aventura", "Puzzle"])
+jogo4 = Jogo(4, "Jogo D", "Dev D", 30, ["Corrida"])
+jogo5 = Jogo(5, "Jogo E", "Dev E", 50, ["RPG", "Ação"])
+
+# Inicializando a árvore binária de busca e a tabela hash
+arvore = ArvoreJogos()
+hashTable = HashGeneros()
+
+# Inserindo os jogos na árvore e na tabela hash
+for jogo in [jogo1, jogo2, jogo3, jogo4, jogo5]:
+    arvore.inserir(jogo)
+    hashTable.adicionar_jogo(jogo)
+
+# Exemplo: Busca de jogos por preço exato
+print("Exemplo 1: Buscar por preço exato (R$50):")
+resultados_preco = arvore.buscar_por_preco(50)
+for jogo in resultados_preco:
+    print(f"Jogo encontrado: {jogo.titulo} - R${jogo.preco}")
+
+# Exemplo: Busca de jogos por faixa de preço
+print("\nExemplo 2: Buscar por faixa de preço (R$30 a R$70):")
+resultados_faixa = arvore.buscar_por_faixa_de_preco(30, 70)
+for jogo in resultados_faixa:
+    print(f"Jogo encontrado: {jogo.titulo} - R${jogo.preco}")
+
+# Exemplo: Busca de jogos por gênero
+print("\nExemplo 3: Buscar por gênero ('RPG'):")
+resultados_genero = hashTable.obter_jogos("RPG")
+for jogo in resultados_genero:
+    print(f"Jogo encontrado: {jogo.titulo} - Gêneros: {', '.join(jogo.generos)}")
+
+#if __name__ == "__main__":
+    #menu()
