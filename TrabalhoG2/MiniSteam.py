@@ -34,24 +34,12 @@ class ArvoreJogos:
                     node.esquerda = NoJogo(jogo)
                     break
                 node = node.esquerda
-            elif jogo.preco > node.jogo.preco:
+            elif jogo.preco >= node.jogo.preco:
                 # desce para a direita se o preço for maior
                 if node.direita is None:
                     node.direita = NoJogo(jogo)
                     break
                 node = node.direita
-            else:
-                # trata nós com preços iguais comparando títulos para manter consistência
-                if jogo.titulo < node.jogo.titulo:
-                    if node.esquerda is None:
-                        node.esquerda = NoJogo(jogo)
-                        break
-                    node = node.esquerda
-                else:
-                    if node.direita is None:
-                        node.direita = NoJogo(jogo)
-                        break
-                    node = node.direita
 
     def buscar_por_preco(self, precoUnico):
         # busca jogos com um preço específico
@@ -178,35 +166,35 @@ class HashGeneros:
         #else:
             #print("Opção inválida. Tente novamente.")
 
-# Criando objetos de exemplo para inserir na árvore e na hash table
+# criando objetos de exemplo para inserir na árvore e na hash table
 jogo1 = Jogo(1, "Jogo A", "Dev A", 50, ["Aventura", "RPG"])
 jogo2 = Jogo(2, "Jogo B", "Dev B", 30, ["Estratégia", "Ação"])
 jogo3 = Jogo(3, "Jogo C", "Dev C", 70, ["Aventura", "Puzzle"])
 jogo4 = Jogo(4, "Jogo D", "Dev D", 30, ["Corrida"])
 jogo5 = Jogo(5, "Jogo E", "Dev E", 50, ["RPG", "Ação"])
 
-# Inicializando a árvore binária de busca e a tabela hash
+# inicializando a árvore binária de busca e a tabela hash
 arvore = ArvoreJogos()
 hashTable = HashGeneros()
 
-# Inserindo os jogos na árvore e na tabela hash
+# inserindo os jogos na árvore e na tabela hash
 for jogo in [jogo1, jogo2, jogo3, jogo4, jogo5]:
     arvore.inserir(jogo)
     hashTable.adicionar_jogo(jogo)
 
-# Exemplo: Busca de jogos por preço exato
+# exemplo: busca de jogos por preço exato
 print("Exemplo 1: Buscar por preço exato (R$50):")
 resultados_preco = arvore.buscar_por_preco(50)
 for jogo in resultados_preco:
     print(f"Jogo encontrado: {jogo.titulo} - R${jogo.preco}")
 
-# Exemplo: Busca de jogos por faixa de preço
+# exemplo: busca de jogos por faixa de preço
 print("\nExemplo 2: Buscar por faixa de preço (R$30 a R$70):")
 resultados_faixa = arvore.buscar_por_faixa_de_preco(30, 70)
 for jogo in resultados_faixa:
     print(f"Jogo encontrado: {jogo.titulo} - R${jogo.preco}")
 
-# Exemplo: Busca de jogos por gênero
+# exemplo: busca de jogos por gênero
 print("\nExemplo 3: Buscar por gênero ('RPG'):")
 resultados_genero = hashTable.obter_jogos("RPG")
 for jogo in resultados_genero:
